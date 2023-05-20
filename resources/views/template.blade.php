@@ -15,7 +15,7 @@
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    {{-- <script src="{{ asset('js/debt.js') }}"></script> --}}
+    <script src="{{ asset('js/debt.js') }}"></script>
     <!------ Include the above in your HEAD tag ---------->
     {{-- <style>
         .navbar {
@@ -242,7 +242,9 @@
                 var option = suggestionDebtors[i];
                 var optName = option.name.toLowerCase();
                 if (optName.includes(inputText)) {
-                    var listItem = $('<a>').addClass('dropdown-item').text(suggestionDebtors[i].name);
+                    var listItem = $('<a>').addClass('dropdown-item').text(suggestionDebtors[i].name + " " + option.address)
+                        .attr('data-id', option.id);
+                    console.log(listItem);
                     dropdownOptions.append(listItem);
                 }
             }
@@ -288,7 +290,11 @@
         //Handle debtor selection
         $(document).on('click', '#dropdownOptions a', function() {
             var selectedOption = $(this).text();
+            var selectedId = $(this).data('id');
+            $('#debtorId').val(selectedId);
             $('#debtor').val(selectedOption);
+            $('#debtor').prop('disabled', true);
+            $('#addNewDebt').prop('disabled', false);
             $('#dropdownOptions').hide();
         });
 
@@ -345,7 +351,7 @@
                                     <th>${res.content[0].name}</th>
                                     <th>${res.content[0].sex}</th>
                                     <th>${res.content[0].address}</th>
-                                    <th>${debtor.amount}</th>
+                                    <th>${Number(debtor.amount).toLocaleString()} រៀល</th>
                                 </tr>`;
                                 }
 
@@ -370,7 +376,7 @@
         });
 
 
-        // When new debt was clicked
+        // When new debt tab was clicked
         $(document).on('click', '#newDebt', function() {
             $.ajax({
                 url: "https://makaracoreapi.reanmakara.xyz/api/debtor/get",
@@ -387,6 +393,15 @@
 
             });
         });
+
+        function newDebt_Clicked() {
+            var amountInput = document.getElementById('amount');
+            if (amountInput.value === '') {
+                amountInput.setCustomValidity('ចំនួនទឹកប្រាក់ត្រូវតែបញ្ជូលជាចាំបាច់');
+            } else {
+                amountInput.setCustomValidity('');
+            }
+        }
         var suggestionDebtors = [];
     </script>
 </body>

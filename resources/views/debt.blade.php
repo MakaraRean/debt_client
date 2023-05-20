@@ -100,22 +100,22 @@
     </div>
 
     <div class="mt-5" id="contentNewDebt" style="display: none">
-        <form class="form-control" action="" method="post">
+        <form class="form-control" action="#df" method="post">
             @csrf
             <div class="mb-3 input-group">
-                <span class="input-group-text" id="span-amount">Amount</span>
-                <input class="form-control" type="text" name="amount" id="amount" aria-describedby="span-amount"
-                    placeholder="Amount" aria-label="amount">
+                <span class="input-group-text" id="span-amount">ចំនួនទឹកប្រាក់</span>
+                <input class="form-control" type="number" name="amount" id="amount" aria-describedby="span-amount"
+                    placeholder="រៀល" aria-label="amount" inputmode="numeric" required>
             </div>
             <div class="input-group mb-3 dropdown">
-                <span class="input-group-text" id="span-debtor">Debtor</span>
-                <input class="form-control" type="text" name="debtor" id="debtor" placeholder="debtor"
-                    aria-describedby="span-debtor" placeholder="Debtor" aria-label="Debtor" autocomplete="off"
-                    oninput="debtorSuggestion()">
-                <input type="text" id="debtorId">
+                <span class="input-group-text" id="span-debtor">អ្នកជំពាក់</span>
+                <input class="form-control" type="text" name="debtor" id="debtor" placeholder="ឈ្មោះ"
+                    aria-describedby="span-debtor" aria-label="Debtor" autocomplete="off" oninput="debtorSuggestion()">
+                <input type="hidden" id="debtorId">
                 <div class="dropdown-menu mt-5" id="dropdownOptions"></div>
             </div>
-            <button class="btn btn-primary" type="submit">Add new</button>
+            <button class="btn btn-primary" type="submit" id="addNewDebt" onclick="newDebt_Clicked()"
+                disabled>បន្តែម</button>
         </form>
     </div>
 
