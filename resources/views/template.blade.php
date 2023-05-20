@@ -4,174 +4,391 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Home</title>
+
+    {{-- <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {{-- <script src="{{ asset('js/debt.js') }}"></script> --}}
+    <!------ Include the above in your HEAD tag ---------->
+    {{-- <style>
+        .navbar {
+            position: relative;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
+            -ms-flex-align: center;
+            align-items: center;
+            -ms-flex-pack: justify;
+            justify-content: space-between;
+            padding: 0rem 0.5rem;
+            background-color: #009df2;
+
+
+
+        }
+
+        .navbar-expand-lg .navbar-nav .nav-link {
+            padding-right: 1rem;
+            padding-left: 1rem;
+            color: #FFF;
+        }
+
+        .navbar-nav {
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+            padding-left: 0;
+            margin-bottom: 0;
+            list-style: none;
+
+        }
+
+        .navbar-brand {
+            display: inline-block;
+            padding-top: 0.3125rem;
+            padding-bottom: 0.3125rem;
+            margin-right: 0rem;
+            font-size: 1.25rem;
+            line-height: inherit;
+            white-space: nowrap;
+
+
+        }
+
+        .navbar-nav .nav-link {
+            padding-right: 0;
+            padding-left: 0;
+        }
+
+        .navbar-nav .dropdown-menu {
+            position: static;
+            float: none;
+        }
+
+        ul {
+            list-style: none;
+            width: 100%;
+        }
+
+        li {
+            display: inline-block;
+            width: 12.5%;
+            text-align: center;
+            border-right-width: 0.15mm;
+            border-left-width: .15mm;
+            border-right-style: solid;
+            border-left-style: solid;
+            border-right-color: #eee;
+            border-left-color: #eee;
+            font-family: 'Oswald', sans-serif;
+            font-size: 15px;
+            margin-right: 1px;
+        }
+
+        @media (max-width:576px) {
+
+            ul {
+                list-style: none;
+                width: 100%;
+            }
+
+            li {
+                display: inline-block;
+                width: 100%;
+                padding: 0;
+                text-align: center;
+                border-right-width: thin;
+                border-left-width: thin;
+                border-right-style: solid;
+                border-left-style: solid;
+                border-right-color: #CCC;
+                border-left-color: #CCC;
+            }
+
+
+        }
+
+
+
+        .navbar-light .navbar-nav .nav-link {
+            color: #fff;
+        }
+
+        .navbar-light .navbar-nav .nav-link:focus,
+        .navbar-light .navbar-nav .nav-link:hover {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .navbar-light .navbar-nav .nav-link.disabled {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .navbar-light .navbar-nav .show>.nav-link,
+        .navbar-light .navbar-nav .active>.nav-link,
+        .navbar-light .navbar-nav .nav-link.show,
+        .navbar-light .navbar-nav .nav-link.active {
+            color: rgba(0, 0, 0, 0.9);
+        }
+
+        .navbar-light .navbar-toggler {
+            color: #FFF;
+            border-color: #FFF;
+        }
+
+        .navbar-light .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba(235, 235, 235, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+            font-weight: normal;
+        }
+
+        .navbar-light .navbar-text {
+            color: rgba(0, 0, 0, 0.5);
+        }
+
+        .navbar-light .navbar-text a {
+            color: rgba(0, 0, 0, 0.9);
+        }
+
+        .navbar-light .navbar-text a:focus,
+        .navbar-light .navbar-text a:hover {
+            color: rgba(0, 0, 0, 0.9);
+        }
+    </style> --}}
+    <style>
+        .logo {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+        }
+    </style>
 </head>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet"
-    integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
-
-<body class="home">
-    <div class="container-fluid display-table">
-        <div class="row display-table-row">
-            <div class="col-md-2 col-sm-1 hidden-xs display-table-cell v-align box" id="navigation">
-                <div class="logo">
-                    <a hef="home.html"><img src="http://jskrishna.com/work/merkury/images/logo.png" alt="merkery_logo"
-                            class="hidden-xs hidden-sm">
-                        <img src="http://jskrishna.com/work/merkury/images/circle-logo.png" alt="merkery_logo"
-                            class="visible-xs visible-sm circle-logo">
-                    </a>
-                </div>
-                <div class="navi">
-                    <ul>
-                        <li class="active"><a href="#"><i class="fa fa-home" aria-hidden="true"></i><span
-                                    class="hidden-xs hidden-sm">Home</span></a></li>
-                        <li><a href="#"><i class="fa fa-tasks" aria-hidden="true"></i><span
-                                    class="hidden-xs hidden-sm">Workflow</span></a></li>
-                        <li><a href="#"><i class="fa fa-bar-chart" aria-hidden="true"></i><span
-                                    class="hidden-xs hidden-sm">Statistics</span></a></li>
-                        <li><a href="#"><i class="fa fa-user" aria-hidden="true"></i><span
-                                    class="hidden-xs hidden-sm">Calender</span></a></li>
-                        <li><a href="#"><i class="fa fa-calendar" aria-hidden="true"></i><span
-                                    class="hidden-xs hidden-sm">Users</span></a></li>
-                        <li><a href="#"><i class="fa fa-cog" aria-hidden="true"></i><span
-                                    class="hidden-xs hidden-sm">Setting</span></a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="col-md-10 col-sm-11 display-table-cell v-align">
-                <!--<button type="button" class="slide-toggle">Slide Toggle</button> -->
-                <div class="row">
-                    <header>
-                        <div class="col-md-7">
-                            <nav class="navbar-default pull-left">
-                                <div class="navbar-header">
-                                    <button type="button" class="navbar-toggle collapsed" data-toggle="offcanvas"
-                                        data-target="#side-menu" aria-expanded="false">
-                                        <span class="sr-only">Toggle navigation</span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                        <span class="icon-bar"></span>
-                                    </button>
-                                </div>
-                            </nav>
-                            <div class="search hidden-xs hidden-sm">
-                                <input type="text" placeholder="Search" id="search">
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="header-rightside">
-                                <ul class="list-inline header-top pull-right">
-                                    <li class="hidden-xs"><a href="#" class="add-project" data-toggle="modal"
-                                            data-target="#add_project">Add Project</a></li>
-                                    <li><a href="#"><i class="fa fa-envelope" aria-hidden="true"></i></a></li>
-                                    <li>
-                                        <a href="#" class="icon-info">
-                                            <i class="fa fa-bell" aria-hidden="true"></i>
-                                            <span class="label label-primary">3</span>
-                </a>
-                                    </li>
-                                    <li class="dropdown">
-                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><img
-                                                src="http://jskrishna.com/work/merkury/images/user-pic.jpg"
-                                                alt="user">
-                                            <b class="caret"></b></a>
-                                        <ul class="dropdown-menu">
-                                            <li>
-                                                <div class="navbar-content">
-                                                    <span>JS Krishna</span>
-                                                    <p class="text-muted small">
-                                                        me@jskrishna.com
-                                                    </p>
-                                                    <div class="divider">
-                                                    </div>
-                                                    <a href="#" class="view btn-sm active">View Profile</a>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </header>
-                </div>
-                <div class="user-dashboard">
-                    <h1>Hello, JS</h1>
-                    <div class="row">
-                        <div class="col-md-5 col-sm-5 col-xs-12 gutter">
-
-                            <div class="sales">
-                                <h2>Your Sale</h2>
-
-                                <div class="btn-group">
-                                    <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span>Period:</span> Last Year
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a href="#">2012</a>
-                                        <a href="#">2014</a>
-                                        <a href="#">2015</a>
-                                        <a href="#">2016</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-7 col-sm-7 col-xs-12 gutter">
-
-                            <div class="sales report">
-                                <h2>Report</h2>
-                                <div class="btn-group">
-                                    <button class="btn btn-secondary btn-lg dropdown-toggle" type="button"
-                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <span>Period:</span> Last Year
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a href="#">2012</a>
-                                        <a href="#">2014</a>
-                                        <a href="#">2015</a>
-                                        <a href="#">2016</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<body>
+    <nav class="navbar bg-dark fixed-top" data-bs-theme="dark">
+        <div class="container-fluid justify-content-center">
+            <a class="navbar-brand" href="#">
+                <img src="{{ asset('images/logo.jpg') }}" alt="Home" class="logo">
+            </a>
+            <a class="navbar-brand nav-link active" href="#">Navbar</a>
+            <a class="navbar-brand" href="#">Navbar</a>
+            <a class="navbar-brand" href="#">Navbar</a>
         </div>
+    </nav>
 
+    <div class="container" style="margin-top: 70px">
+        <ul class="nav nav-tabs" id="myTab">
+            <li class="nav-item">
+                <a class="nav-link active" href="" id="listOfDebts">List of
+                    debtors</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="" id="newDebt">New</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="" id="payDebt" role="button">Pay</a>
+            </li>
+        </ul>
+
+        @yield('content')
     </div>
 
+    <script>
+        const triggerTabList = document.querySelectorAll('#myTab a')
+        const listOfDebt = document.getElementById('contentListOfDebt');
+        const newDebt = document.getElementById('contentNewDebt');
+        const payDebt = document.getElementById('contentPayDebt');
+        triggerTabList.forEach(triggerEl => {
+            const tabTrigger = new bootstrap.Tab(triggerEl)
+
+            triggerEl.addEventListener('click', event => {
+                event.preventDefault()
+                tabTrigger.show()
+                if (tabTrigger._element.id == 'listOfDebts') {
+                    // Show List of Debts
+                    listOfDebt.style.display = "block";
+                    newDebt.style.display = "none";
+                    payDebt.style.display = "none";
+                } else if (tabTrigger._element.id == 'newDebt') {
+                    listOfDebt.style.display = "none";
+                    newDebt.style.display = "block";
+                    payDebt.style.display = "none";
+                } else {
+                    // Show form to edit or form to pay any debt
+                    payDebt.style.display = "block";
+                    listOfDebt.style.display = "none";
+                    newDebt.style.display = "none";
+                }
+            })
+        })
+
+        // Show select option under input
+        function debtorSuggestion() {
+            var inputText = $('#debtor').val().toLowerCase();
+            var dropdownOptions = $('#dropdownOptions');
+
+            // Clear previous options
+            dropdownOptions.empty();
+
+            // Generate and append new options
+            for (var i = 0; i < suggestionDebtors.length; i++) {
+                var option = suggestionDebtors[i];
+                var optName = option.name.toLowerCase();
+                if (optName.includes(inputText)) {
+                    var listItem = $('<a>').addClass('dropdown-item').text(suggestionDebtors[i].name);
+                    dropdownOptions.append(listItem);
+                }
+            }
+
+            // Show or hide dropdown options based on the input text
+            if (inputText.length > 0 && dropdownOptions.children().length > 0) {
+                dropdownOptions.show();
+            } else {
+                dropdownOptions.hide();
+            }
+        };
+
+        function debtSuggestion() {
+            var inputText = $('#debt').val().toLowerCase();
+            var dropdownOptions = $('#dropdownOptionDebt');
+
+            // Clear previous options
+            dropdownOptions.empty();
+
+            // Generate and append new options
+            for (var i = 0; i < suggestedOptions.length; i++) {
+                var option = suggestedOptions[i].toLowerCase();
+                if (option.includes(inputText)) {
+                    var listItem = $('<a>').addClass('dropdown-item').text(suggestedOptions[i]);
+                    dropdownOptions.append(listItem);
+                }
+            }
+
+            // Show or hide dropdown options based on the input text
+            if (inputText.length > 0 && dropdownOptions.children().length > 0) {
+                dropdownOptions.show();
+            } else {
+                dropdownOptions.hide();
+            }
+        };
+        // Handle option selection
+        $(document).on('click', '#dropdownOptionDebt a', function() {
+            var selectedOption = $(this).text();
+            $('#debt').val(selectedOption);
+            $('#dropdownOptionDebt').hide();
+        });
+
+        //Handle debtor selection
+        $(document).on('click', '#dropdownOptions a', function() {
+            var selectedOption = $(this).text();
+            $('#debtor').val(selectedOption);
+            $('#dropdownOptions').hide();
+        });
+
+        // Handle pay some checkbox
+        $(document).on('click', '#paySomeCheckbox', function() {
+            // Check if checkbox is checked
+            if ($(this).is(':checked')) {
+                // Show the element
+                $('#divPaySome').show();
+            } else {
+                $('#divPaySome').hide();
+            }
+        });
+        // Example of suggested options (can be fetched from an API or a predefined list)
+        var suggestedOptions = [
+            'Apple',
+            'Banana',
+            'Orange',
+            'Pineapple',
+            'Grapes',
+            'Mango',
+            'Strawberry'
+        ];
 
 
-    <!-- Modal -->
-    <div id="add_project" class="modal fade" role="dialog">
-        <div class="modal-dialog">
+        $(document).ready(function() {
+            // Make http request to get all the debtors and add them to table
+            var spinner = document.getElementById('loadingSpinner');
+            spinner.style.display = 'block';
+            $.ajax({
+                url: "https://makaracoreapi.reanmakara.xyz/api/debt/get",
+                type: "GET",
+                success: function(response) {
+                    console.log(response.content);
 
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header login-header">
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                    <h4 class="modal-title">Add Project</h4>
-                </div>
-                <div class="modal-body">
-                    <input type="text" placeholder="Project Title" name="name">
-                    <input type="text" placeholder="Post of Post" name="mail">
-                    <input type="text" placeholder="Author" name="passsword">
-                    <textarea placeholder="Desicrption"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="cancel" data-dismiss="modal">Close</button>
-                    <button type="button" class="add-project" data-dismiss="modal">Save</button>
-                </div>
-            </div>
+                    function addDebtorToTable(debtor) {
+                        let debtorRow = '';
+                        $.ajax({
+                            url: 'https://makaracoreapi.reanmakara.xyz/api/debtor/get?id=' +
+                                debtor.debtor_id,
+                            type: "GET",
+                            success: function(res) {
+                                if (debtor.is_paid) {
+                                    debtorRow = `<tr class="table-success text-decoration-line-through">
+                                    <th>${debtor.id}</th>
+                                    <th>${res.content[0].name}</th>
+                                    <th>${res.content[0].sex}</th>
+                                    <th>${res.content[0].address}</th>
+                                    <th>${debtor.amount}</th>
+                                </tr>`;
+                                } else {
+                                    debtorRow = `<tr class="table-warning">
+                                    <th>${debtor.id}</th>
+                                    <th>${res.content[0].name}</th>
+                                    <th>${res.content[0].sex}</th>
+                                    <th>${res.content[0].address}</th>
+                                    <th>${debtor.amount}</th>
+                                </tr>`;
+                                }
 
-        </div>
-    </div>
+                                $('#tableBody').append(debtorRow);
+                            }
+                        });
+                    }
 
+                    if (response.status == 200) {
+                        // Foreach debtor in the response content, add it to the table
+                        response.content.forEach(debtor => {
+                            addDebtorToTable(debtor);
+                        });
+                        spinner.style.display = 'none';
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+
+            });
+        });
+
+
+        // When new debt was clicked
+        $(document).on('click', '#newDebt', function() {
+            $.ajax({
+                url: "https://makaracoreapi.reanmakara.xyz/api/debtor/get",
+                type: "GET",
+                success: function(response) {
+                    console.log(response);
+                    if (response.status == 200) {
+                        suggestionDebtors = response.content;
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+
+            });
+        });
+        var suggestionDebtors = [];
+    </script>
 </body>
 
 </html>

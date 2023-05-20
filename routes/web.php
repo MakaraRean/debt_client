@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DebtController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +18,4 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::GET('/test', function () {
-    return view('template');
-});
+Route::GET('/debt', [DebtController::class, 'getDebt'])->name('getDebt');
