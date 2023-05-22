@@ -322,6 +322,8 @@
 
         $(document).ready(function() {
             // Make http request to get all the debtors and add them to table
+            $('#btnSaveDebtorSpinner').hide();
+            $('#btnSaveDebtSpinner').hide();
             var spinner = document.getElementById('loadingSpinner');
             spinner.style.display = 'block';
             $.ajax({
@@ -376,8 +378,8 @@
         });
 
 
-        // When new debt tab was clicked
-        $(document).on('click', '#newDebt', function() {
+        // When debtor name input on focus
+        function getDebtor_onFocus() {
             $.ajax({
                 url: "https://makaracoreapi.reanmakara.xyz/api/debtor/get",
                 type: "GET",
@@ -392,16 +394,7 @@
                 }
 
             });
-        });
-
-        function newDebt_Clicked() {
-            var amountInput = document.getElementById('amount');
-            if (amountInput.value === '') {
-                amountInput.setCustomValidity('ចំនួនទឹកប្រាក់ត្រូវតែបញ្ជូលជាចាំបាច់');
-            } else {
-                amountInput.setCustomValidity('');
-            }
-        }
+        };
         var suggestionDebtors = [];
     </script>
 </body>

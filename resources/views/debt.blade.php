@@ -29,8 +29,8 @@
                         <label for="selectDebt">Select Debts : </label>
                         <select class="form-select" name="selectDebt" id="selectDebt">
                             <option value="All Debts">All debts</option>
-                            <option value="All Debts">Paid only</option>
-                            <option value="All Debts">Not pay yet only</option>
+                            <option value="Paid only">Paid only</option>
+                            <option value="Not pay yet only">Not pay yet only</option>
                         </select>
                     </div>
                     <button class="btn btn-primary" type="submit">Search</button>
@@ -102,20 +102,75 @@
     <div class="mt-5" id="contentNewDebt" style="display: none">
         <form class="form-control" action="#df" method="post">
             @csrf
+            <div id="newDebtAlertMessage">
+
+            </div>
             <div class="mb-3 input-group">
                 <span class="input-group-text" id="span-amount">ចំនួនទឹកប្រាក់</span>
                 <input class="form-control" type="number" name="amount" id="amount" aria-describedby="span-amount"
                     placeholder="រៀល" aria-label="amount" inputmode="numeric" required>
             </div>
-            <div class="input-group mb-3 dropdown">
+            <div class="input-group dropdown">
                 <span class="input-group-text" id="span-debtor">អ្នកជំពាក់</span>
                 <input class="form-control" type="text" name="debtor" id="debtor" placeholder="ឈ្មោះ"
-                    aria-describedby="span-debtor" aria-label="Debtor" autocomplete="off" oninput="debtorSuggestion()">
+                    aria-describedby="span-debtor" aria-label="Debtor" autocomplete="off" oninput="debtorSuggestion()"
+                    onfocus="getDebtor_onFocus()">
                 <input type="hidden" id="debtorId">
                 <div class="dropdown-menu mt-5" id="dropdownOptions"></div>
             </div>
-            <button class="btn btn-primary" type="submit" id="addNewDebt" onclick="newDebt_Clicked()"
-                disabled>បន្តែម</button>
+            <p class="text-body-secondary" style="font-size: 12px">សរសេរឈ្មោះអ្នកជំពាក់ រួចជ្រើសយកក្នុងបញ្ជីរ
+                បើមិនមានក្នុងបញ្ជីរ <a href="" data-bs-toggle="modal"
+                    data-bs-target="#newDebtorMedal">សូមបង្កើតថ្មី</a></p>
+            <button class="btn btn-primary" type="submit" id="addNewDebt" onclick="newDebt_Clicked()" disabled>
+                <span id="btnSaveDebtSpinner" class="spinner-border spinner-border-sm" role="status"
+                    aria-hidden="true"></span>
+                បន្តែម
+            </button>
+            <!-- Modal -->
+            <div class="modal fade" id="newDebtorMedal" tabindex="-1" aria-labelledby="newDebtorMedal"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="medalTitle">បង្កើតអ្នកជំពាក់ថ្មី</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <form class="form-control" action="" method="post">
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="input-group">
+                                        <span class="input-group-text" id="span-debtor-name">ឈ្មោះអ្នកជំពាក់</span>
+                                        <input class="form-control" type="text" name="debtorName" id="debtorName"
+                                            aria-describedby="span-debtor-name" placeholder="ឈ្មោះ">
+                                    </div>
+                                    <div class="input-group mt-3">
+                                        <span class="input-group-text" id="span-debtor-address">អាស័យដ្ឋាន</span>
+                                        <input class="form-control" type="text" name="debtorAddress"
+                                            id="debtorAddress" aria-describedby="span-debtor-address" placeholder="ភូមិ">
+                                    </div>
+                                    <div class="input-group mt-3">
+                                        <select class="form-select" name="debtorSex" id="debtorSex">
+                                            <option value="ប្រុស">ប្រុស</option>
+                                            <option value="ស្រី">ស្រី</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" id="closeMedal"
+                                    data-bs-dismiss="modal">បិទ</button>
+                                <button id="btnSaveDebtor" type="button" class="btn btn-primary" onclick="newDebtor()">
+                                    <span id="btnSaveDebtorSpinner" class="spinner-border spinner-border-sm"
+                                        role="status" aria-hidden="true"></span>
+                                    <span class="buttom-text" id="btnSaveDebtorText">រក្សាទុក</span>
+                                    {{-- Loading... --}}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
 
