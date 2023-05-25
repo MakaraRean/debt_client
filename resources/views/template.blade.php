@@ -364,8 +364,29 @@
 
                     if (response.status == 200) {
                         // Foreach debtor in the response content, add it to the table
-                        response.content.forEach(debtor => {
-                            addDebtorToTable(debtor);
+                        let debtorRow = '';
+                        let rowNum = 1;
+                        response.content.forEach(debt => {
+                            //addDebtorToTable(debtor);
+                            if (debt.is_paid) {
+                                debtorRow = `<tr class="table-success text-decoration-line-through">
+                                    <th>${rowNum}</th>
+                                    <th>${debt.debtor.name}</th>
+                                    <th>${debt.debtor.sex}</th>
+                                    <th>${debt.debtor.address}</th>
+                                    <th>${Number(debt.amount).toLocaleString()} រៀល</th>
+                                </tr>`;
+                            } else {
+                                debtorRow = `<tr class="table-warning">
+                                    <th>${rowNum}</th>
+                                    <th>${debt.debtor.name}</th>
+                                    <th>${debt.debtor.sex}</th>
+                                    <th>${debt.debtor.address}</th>
+                                    <th>${Number(debt.amount).toLocaleString()} រៀល</th>
+                                </tr>`;
+                            }
+                            rowNum++;
+                            $('#tableBody').append(debtorRow);
                         });
                         spinner.style.display = 'none';
                     }
