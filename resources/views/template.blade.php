@@ -186,14 +186,13 @@
     <div class="container" style="margin-top: 70px">
         <ul class="nav nav-tabs" id="myTab">
             <li class="nav-item">
-                <a class="nav-link active" href="" id="listOfDebts">List of
-                    debtors</a>
+                <a class="nav-link active" href="" id="listOfDebts">វិក្តយបត្រជំពាក់ទាំងអស់</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="" id="newDebt">New</a>
+                <a class="nav-link" href="" id="newDebt">ថែមវិក្តយបត្រជំពាក់ថ្មី</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="" id="payDebt" role="button">Pay</a>
+                <a class="nav-link" href="" id="payDebt" role="button">ទូទាត់</a>
             </li>
         </ul>
 
