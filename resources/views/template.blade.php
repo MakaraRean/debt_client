@@ -230,9 +230,9 @@
         })
 
         // Show select option under input
-        function debtorSuggestion() {
-            var inputText = $('#debtor').val().toLowerCase();
-            var dropdownOptions = $('#dropdownOptions');
+        function debtorSuggestion(elementId, inputTextId) {
+            var inputText = $(inputTextId).val().toLowerCase();
+            var dropdownOptions = $(elementId);
 
             // Clear previous options
             dropdownOptions.empty();
@@ -280,11 +280,33 @@
                 dropdownOptions.hide();
             }
         };
-        // Handle option selection
+        // Handle option selection (pay debt tab)
         $(document).on('click', '#dropdownOptionDebt a', function() {
             var selectedOption = $(this).text();
-            $('#debt').val(selectedOption);
+            $('#debtorToPay').val(selectedOption);
+            $('#debtorToPay').prop('disabled', true);
+            $('#debtorToPayId').val($(this).data('id'));
             $('#dropdownOptionDebt').hide();
+            $('#payDebtSpinner').show();
+            $.ajax({
+                url: 'https://makaracoreapi.reanmakara.xyz/api/debt/getByDebtor/' + $(this).data('id'),
+                type: 'GET',
+                success: function(response) {
+                    $('#amountToPay').val(response.content.total_amount + ' រៀល');
+                    $('#txtDebtCount').val(response.content.debt_count + ' វិក័យបត្រ');
+                    $('#btnPay').prop('disabled', false);
+                    $('#payDebtSpinner').hide();
+                },
+                error: function(err) {
+                    $('#amountToPay').val(err.responseJSON.message);
+                    $('#payDebtSpinner').hide();
+                    $('#payDebtAlertMessage').append(
+                        '<div class="alert alert-danger alert-dismissible role="alert"><div>អតិថិជនមិនមានវិក័យបត្រដែលជំពាក់</div><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>'
+                    ).delay(5000).fadeOut(1000);
+                    $('#debtorToPay').prop('disabled', false);
+                    $('#debtorToPay').val('');
+                }
+            });
         });
 
         //Handle debtor selection
@@ -308,60 +330,22 @@
                 $('#divPaySome').hide();
             }
         });
-        // Example of suggested options (can be fetched from an API or a predefined list)
-        var suggestedOptions = [
-            'Apple',
-            'Banana',
-            'Orange',
-            'Pineapple',
-            'Grapes',
-            'Mango',
-            'Strawberry'
-        ];
 
 
         $(document).ready(function() {
             // Make http request to get all the debtors and add them to table
             $('#btnSaveDebtorSpinner').hide();
             $('#btnSaveDebtSpinner').hide();
-            var spinner = document.getElementById('loadingSpinner');
+            let totalDebtAmount = 0;
+            let unpaidDebtAmount = 0;
+            let paidDebtAmount = 0;
+            var spinner = document.getElementById('loading');
             spinner.style.display = 'block';
             $.ajax({
                 url: "https://makaracoreapi.reanmakara.xyz/api/debt/get",
                 type: "GET",
                 success: function(response) {
                     console.log(response.content);
-
-                    function addDebtorToTable(debtor) {
-                        let debtorRow = '';
-                        $.ajax({
-                            url: 'https://makaracoreapi.reanmakara.xyz/api/debtor/get?id=' +
-                                debtor.debtor_id,
-                            type: "GET",
-                            success: function(res) {
-                                if (debtor.is_paid) {
-                                    debtorRow = `<tr class="table-success text-decoration-line-through">
-                                    <th>${debtor.id}</th>
-                                    <th>${res.content[0].name}</th>
-                                    <th>${res.content[0].sex}</th>
-                                    <th>${res.content[0].address}</th>
-                                    <th>${debtor.amount}</th>
-                                </tr>`;
-                                } else {
-                                    debtorRow = `<tr class="table-warning">
-                                    <th>${debtor.id}</th>
-                                    <th>${res.content[0].name}</th>
-                                    <th>${res.content[0].sex}</th>
-                                    <th>${res.content[0].address}</th>
-                                    <th>${Number(debtor.amount).toLocaleString()} រៀល</th>
-                                </tr>`;
-                                }
-
-                                $('#tableBody').append(debtorRow);
-                            }
-                        });
-                    }
-
                     if (response.status == 200) {
                         // Foreach debtor in the response content, add it to the table
                         let debtorRow = '';
@@ -376,6 +360,7 @@
                                     <th>${debt.debtor.address}</th>
                                     <th>${Number(debt.amount).toLocaleString()} រៀល</th>
                                 </tr>`;
+                                paidDebtAmount += debt.amount;
                             } else {
                                 debtorRow = `<tr class="table-warning">
                                     <th>${rowNum}</th>
@@ -384,11 +369,23 @@
                                     <th>${debt.debtor.address}</th>
                                     <th>${Number(debt.amount).toLocaleString()} រៀល</th>
                                 </tr>`;
+                                unpaidDebtAmount += debt.amount;
                             }
+                            totalDebtAmount += debt.amount;
                             rowNum++;
                             $('#tableBody').append(debtorRow);
                         });
                         spinner.style.display = 'none';
+                        // $('#totalDebtAmount').html(
+                        //     `${Number(totalDebtAmount).toLocaleString()} (${amountToText(totalDebtAmount)})`
+                        // );
+                        // $('#unpaidDebtAmount').html(
+                        //     `${Number(unpaidDebtAmount).toLocaleString()} (${amountToText(unpaidDebtAmount)})`
+                        // );
+                        // $('#paidDebtAmount').html(
+                        //     `${Number(paidDebtAmount).toLocaleString()} (${amountToText(paidDebtAmount)})`
+                        // );
+                        updateDebtAmount();
                     }
                 },
                 error: function(error) {

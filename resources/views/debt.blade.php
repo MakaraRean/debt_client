@@ -13,27 +13,27 @@
                 <div class="row g-2 mt-2">
                     <div class="col-md-6">
                         <div class="col-auto">
-                            <label for="d1">From : </label>
+                            <label for="d1">ចាប់ពីថ្ងៃទី : </label>
                         </div>
                         <div class="col-auto">
                             <input class="form-control" type="date" name="d1" id="d1">
                         </div>
                         <div class="col-auto">
-                            <label for="d1">To : </label>
+                            <label for="d1">ដល់ថ្ងៃទី : </label>
                         </div>
                         <div class="col-auto">
                             <input class="form-control" type="date" name="d2" id="d2">
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <label for="selectDebt">Select Debts : </label>
+                        <label for="selectDebt">ប្រភេទបំណុល : </label>
                         <select class="form-select" name="selectDebt" id="selectDebt">
-                            <option value="All Debts">All debts</option>
-                            <option value="Paid only">Paid only</option>
-                            <option value="Not pay yet only">Not pay yet only</option>
+                            <option value="All">ទាំងអស់ (ទូទាត់រួច និង​ មិនទាន់ទូទាត់)</option>
+                            <option value="Paid">បានទូទាត់រួចរាល់</option>
+                            <option value="Unpaid">មិនទាន់បានទូទាត់</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary" type="submit">Search</button>
+                    <button class="btn btn-primary" type="button" onclick="search()">Search</button>
                 </div>
             </div>
         </form>
@@ -44,42 +44,45 @@
             <div class="col-auto">
                 <button class="form-control" type="submit">Search</button>
             </div>
+
+            <a class="btn" data-bs-toggle="collapse" href="#collapseTotalAmount" role="button" aria-expanded="false"
+                aria-controls="collapseTotalAmount">
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-primary">
+                        ទឹកប្រាក់សរុបទាំងអស់ : <span class="text-primary" id="totalDebtAmount"></span>
+                    </li>
+                    <div class="collapse" id="collapseTotalAmount">
+                        <li class="list-group-item list-group-item-danger">មិនទាន់ទូទាត់ : <span
+                                id="unpaidDebtAmount"></span>
+                        </li>
+                        <li class="list-group-item list-group-item-success">ទូទាត់រួច : <span id="paidDebtAmount"></span>
+                        </li>
+                    </div>
+                </ul>
+            </a>
         </div>
 
-        <table class="table caption-top table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Sex</th>
-                    <th>Address</th>
-                    <th>Debt</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody">
-                <tr id="loadingSpinner" style="display: none">
-                    <th>
-                        <div class="spinner-border" role="status">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
-                    </th>
-                </tr>
-                {{-- <tr class="table-success text-decoration-line-through">
-                    <th>01</th>
-                    <th><s>Makara</s></th>
-                    <th>Male</th>
-                    <th>Phnom Penh</th>
-                    <th>10000</th>
-                </tr>
-                <tr class="table-warning">
-                    <th>01</th>
-                    <th>Makara</th>
-                    <th>Male</th>
-                    <th>Phnom Penh</th>
-                    <th>10000</th>
-                </tr> --}}
-            </tbody>
-        </table>
+        <div id="contentAboveTable" class="d-flex justify-content-center mb-2" style="display: none">
+            <div id="loading" class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+        <div class="table-responsive" style="height: 60%">
+            <table class="table caption-top table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ល.រ</th>
+                        <th>ឈ្មោះ</th>
+                        <th>ភេទ</th>
+                        <th>អាស័យដ្ឋាន</th>
+                        <th>ចំនួនទឹកប្រាក់</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+
+                </tbody>
+            </table>
+        </div>
 
         {{-- Pagination --}}
         <nav>
@@ -113,8 +116,8 @@
             <div class="input-group dropdown">
                 <span class="input-group-text" id="span-debtor">អ្នកជំពាក់</span>
                 <input class="form-control" type="text" name="debtor" id="debtor" placeholder="ឈ្មោះ"
-                    aria-describedby="span-debtor" aria-label="Debtor" autocomplete="off" oninput="debtorSuggestion()"
-                    onfocus="getDebtor_onFocus()">
+                    aria-describedby="span-debtor" aria-label="Debtor" autocomplete="off"
+                    oninput="debtorSuggestion('#dropdownOptions', '#debtor')" onfocus="getDebtor_onFocus()">
                 <input type="hidden" id="debtorId">
                 <div class="dropdown-menu mt-5" id="dropdownOptions"></div>
             </div>
@@ -177,18 +180,33 @@
     <div id="contentPayDebt" style="display: none">
         <form class="mt-5 form-control row" action="" method="post">
             @csrf
+            <div id="payDebtAlertMessage"></div>
             <div class="col-md-6 input-group mb-3 dropdown">
-                <span class="input-group-text" id="span-debt">Debt</span>
-                <input class="form-control" type="text" name="debt" id="debt" placeholder="debt"
-                    aria-describedby="span-debtor" placeholder="Debt" aria-label="Debt" autocomplete="off"
-                    oninput="debtSuggestion()">
+                <span class="input-group-text" id="span-debt">ឈ្មោះអ្នកជំពាក់</span>
+                <input class="form-control" type="text" name="debtorToPay" id="debtorToPay"
+                    placeholder="ឈ្មោះ និង ភូមិ" aria-describedby="span-debtor" placeholder="Debtor" aria-label="Debt"
+                    autocomplete="off" oninput="debtorSuggestion('#dropdownOptionDebt', '#debtorToPay')"
+                    onfocus="getDebtor_onFocus()">
+                <input type="hidden" id="debtorToPayId">
                 <div class="dropdown-menu mt-5" id="dropdownOptionDebt"></div>
             </div>
 
-            <div class="col-md-6 mb-3 input-group">
-                <span class="input-group-text" id="span-amount-topay">Amount to pay</span>
+            <div class="col-md-4 mb-3 input-group">
+
+                <span class="input-group-text" id="span-amount-topay">ទឹកប្រាក់ដែលត្រូវទូទាត់</span>
                 <input class="form-control" type="text" id="amountToPay" name="amountToPay"
-                    aria-describedby="span-amout-topay" value="10000" disabled>
+                    aria-describedby="span-amout-topay" placeholder="រៀល" readonly>
+                <div class="input-group-append" id="payDebtSpinner" style="display: none">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3 input-group">
+                <span class="input-group-text" id="span-debt-count">ចំនួនវិក័យបត្រដែលជំពាក់</span>
+                <input class="form-control" type="text" id="txtDebtCount" name="txtDebtCount"
+                    aria-describedby="span-debt-count" placeholder="រិក័យបត្រ" readonly>
             </div>
 
             <div class="form-check mb-3">
@@ -202,7 +220,31 @@
                 <input class="form-control" type="text" name="topay" id="topay" placeholder="topay"
                     aria-describedby="span-topay" placeholder="topay" aria-label="topay" autocomplete="off">
             </div>
-            <button class="mt-3 col btn btn-primary" type="submit">Pay</button>
+            <button class="mt-3 col btn btn-primary" id="btnPay" type="button" disabled data-bs-toggle="modal"
+                data-bs-target="#payDebtMedal">Pay</button>
         </form>
+
+        {{-- Modal --}}
+        <div class="modal fade" id="payDebtMedal" tabindex="-1" aria-labelledby="payDebtMedal" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="payMedalTitle">title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>បើសិនជាអតិថិជនបានទូទាត់រួចសូមចុច បាទ/ចាស។ បើសិនអតិថិជនមិនទាន់បានទូទាត់សូមចុច ទេ</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="closePayMedal"
+                            data-bs-dismiss="modal">ទេ</button>
+                        <button id="btnPayDebt" type="button" class="btn btn-primary">
+                            <span id="btnPayDebtSpinner" class="spinner-border spinner-border-sm" role="status"
+                                style="display: none" aria-hidden="true"></span>
+                            <span class="buttom-text" id="btnPayDebtText">បាទ/ចាស</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
