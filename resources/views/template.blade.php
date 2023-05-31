@@ -16,6 +16,7 @@
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('js/debt.js') }}"></script>
+    <script src="https://kit.fontawesome.com/03f1f90a30.js" crossorigin="anonymous"></script>
     <!------ Include the above in your HEAD tag ---------->
     {{-- <style>
         .navbar {
@@ -228,33 +229,7 @@
             })
         })
 
-        // Show select option under input
-        function debtorSuggestion(elementId, inputTextId) {
-            var inputText = $(inputTextId).val().toLowerCase();
-            var dropdownOptions = $(elementId);
 
-            // Clear previous options
-            dropdownOptions.empty();
-
-            // Generate and append new options
-            for (var i = 0; i < suggestionDebtors.length; i++) {
-                var option = suggestionDebtors[i];
-                var optName = option.name.toLowerCase();
-                if (optName.includes(inputText)) {
-                    var listItem = $('<a>').addClass('dropdown-item').text(suggestionDebtors[i].name + " " + option.address)
-                        .attr('data-id', option.id);
-                    console.log(listItem);
-                    dropdownOptions.append(listItem);
-                }
-            }
-
-            // Show or hide dropdown options based on the input text
-            if (inputText.length > 0 && dropdownOptions.children().length > 0) {
-                dropdownOptions.show();
-            } else {
-                dropdownOptions.hide();
-            }
-        };
 
         function debtSuggestion() {
             var inputText = $('#debt').val().toLowerCase();
@@ -331,7 +306,7 @@
         });
 
 
-        $(document).ready(function() {
+        $(document).ready(async function() {
             // Make http request to get all the debtors and add them to table
             $('#btnSaveDebtorSpinner').hide();
             $('#btnSaveDebtSpinner').hide();
@@ -340,7 +315,7 @@
             let paidDebtAmount = 0;
             var spinner = document.getElementById('loading');
             spinner.style.display = 'block';
-            $.ajax({
+            await $.ajax({
                 url: "https://makaracoreapi.reanmakara.xyz/api/debt/get",
                 type: "GET",
                 success: function(response) {
@@ -358,6 +333,7 @@
                                     <th>${debt.debtor.sex}</th>
                                     <th>${debt.debtor.address}</th>
                                     <th>${Number(debt.amount).toLocaleString()} រៀល</th>
+                                    <th>${debt.note || ""}</th>
                                 </tr>`;
                                 paidDebtAmount += debt.amount;
                             } else {
@@ -367,6 +343,7 @@
                                     <th>${debt.debtor.sex}</th>
                                     <th>${debt.debtor.address}</th>
                                     <th>${Number(debt.amount).toLocaleString()} រៀល</th>
+                                    <th>${debt.note || ""}</th>
                                 </tr>`;
                                 unpaidDebtAmount += debt.amount;
                             }
@@ -375,44 +352,19 @@
                             $('#tableBody').append(debtorRow);
                         });
                         spinner.style.display = 'none';
-                        // $('#totalDebtAmount').html(
-                        //     `${Number(totalDebtAmount).toLocaleString()} (${amountToText(totalDebtAmount)})`
-                        // );
-                        // $('#unpaidDebtAmount').html(
-                        //     `${Number(unpaidDebtAmount).toLocaleString()} (${amountToText(unpaidDebtAmount)})`
-                        // );
-                        // $('#paidDebtAmount').html(
-                        //     `${Number(paidDebtAmount).toLocaleString()} (${amountToText(paidDebtAmount)})`
-                        // );
                         updateDebtAmount();
                     }
                 },
                 error: function(error) {
                     console.log(error);
+                    spinner.style.display = 'none';
+                    contentAboveTable(
+                        `ទិន្ន័យអាចរកឃើញ || ${error.responseJSON.message} (${error.responseJSON.status})`,
+                        'alert-danger');
                 }
 
             });
         });
-
-
-        // When debtor name input on focus
-        function getDebtor_onFocus() {
-            $.ajax({
-                url: "https://makaracoreapi.reanmakara.xyz/api/debtor/get",
-                type: "GET",
-                success: function(response) {
-                    console.log(response);
-                    if (response.status == 200) {
-                        suggestionDebtors = response.content;
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-
-            });
-        };
-        var suggestionDebtors = [];
     </script>
 </body>
 

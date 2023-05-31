@@ -86,6 +86,99 @@ function formatNumber(input) {
   
     return convertCurrencyToText(amount) + "រៀល";
   }
+
+  function contentAboveTable(message, alertType){
+    $('#contentAboveTable').empty();
+    return $('#contentAboveTable').append(`<div class="alert ${alertType} alert-dismissible role="alert"><div>${message}</div><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+  }
+
+  function showDebtorSuggestion(dropdownOption) {
+    // Clear previous options
+    var dropdownOptions = $(dropdownOption);
+    dropdownOptions.empty();
+    for (var i = 0; i < suggestionDebtors.length; i++) {
+      var option = suggestionDebtors[i];
+      var listItem = $('<a>').addClass('dropdown-item').text(suggestionDebtors[i].name + " " + option.address)
+          .attr('data-id', option.id);
+      console.log(listItem);
+      dropdownOptions.append(listItem);
+    }
+    dropdownOptions.show();
+  }
+
+  // When debtor name input on focus
+  function getDebtor_onFocus(iconParrent, dropdownOption) {
+    var spinner = $(`${iconParrent} i#iconSpinner`);
+    var  check = $(`${iconParrent} i#iconCheck`);
+    var  x = $(`${iconParrent} i#iconX`);
+    spinner.show();
+    check.hide();
+    x.hide();
+    $.ajax({
+        url: "https://makaracoreapi.reanmakara.xyz/api/debtor/get",
+        type: "GET",
+        success: function(response) {
+            console.log(response);
+            if (response.status == 200) {
+                check.show();
+                suggestionDebtors = response.content;
+            }
+            showDebtorSuggestion(dropdownOption);
+            spinner.hide();
+        },
+        error: function(error) {
+            console.log(error);
+            x.show();
+            spinner.hide();
+        }
+    });   
+  };
+var suggestionDebtors = [];
+
+function debtorFound(status, iconParrent){
+  var spinner = $(`${iconParrent} i#iconSpinner`);
+  var  check = $(`${iconParrent} i#iconCheck`);
+  var  x = $(`${iconParrent} i#iconX`);
+  if (status == '1') {
+    check.show();
+    x.hide();
+  } else {
+    check.hide();
+    x.show();
+  }
+}
+  // Show select option under input
+  function debtorSuggestion(elementId, inputTextId, iconParrent) {
+    var inputText = $(inputTextId).val().toLowerCase();
+    var dropdownOptions = $(elementId);
+    // Clear previous options
+    dropdownOptions.empty();
+
+    // Generate and append new options
+    for (var i = 0; i < suggestionDebtors.length; i++) {
+        var option = suggestionDebtors[i];
+        var optName = option.name.toLowerCase();
+        if (optName.includes(inputText)) {
+            var listItem = $('<a>').addClass('dropdown-item').text(suggestionDebtors[i].name + " " + option.address)
+                .attr('data-id', option.id);
+            console.log(listItem);
+            dropdownOptions.append(listItem);
+        }
+    }
+
+    // Show or hide dropdown options based on the input text
+    if (inputText.length > 0 && dropdownOptions.children().length > 0) {
+        dropdownOptions.show();
+        debtorFound(1, iconParrent);
+    }
+    else if( inputText.length == 0 && suggestionDebtors.length > 0){
+      dropdownOptions.show();
+      debtorFound(1, iconParrent);
+    } else {
+      debtorFound(0, iconParrent);
+      dropdownOptions.hide();
+    }
+  }
   
 
   // function newDebtor(){
@@ -147,7 +240,6 @@ function formatNumber(input) {
         $('#btnSaveDebtorSpinner').hide();
         $("#closeMedal").click();
         $('#newDebtAlertMessage').append('<div class="alert alert-success alert-dismissible role="alert"><div>បង្កើតអ្នកជំពាក់បានដោយជោគជ័យ។ សរសេរឈ្មោះអ្នកជំពាក់ខាងក្រោម</div><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>').delay(5000).fadeOut(1000);
-        location.reload();
       } else {
         window.alert(response);
       }
@@ -180,7 +272,8 @@ function formatNumber(input) {
   
     var response = await $.post("https://makaracoreapi.reanmakara.xyz/api/debt/add", {
       debtor_id: $("#debtorId").val(),
-      amount: $("#amount").val()
+      amount: $("#amount").val(),
+      note: $("#txtNote").val(),
     });
     console.log(response);
       if (response.status == 201) {
@@ -196,7 +289,9 @@ function formatNumber(input) {
   }
 
   function updateDebtAmount(){
-    var table = $('#tableBody tr');
+    var table = $('#tableBody tr').filter(function() {
+      return $(this).css('display') != 'none';
+    });
     let totalAmount = 0;
     let unpaidAmount = 0;
     let paidAmount = 0;
@@ -223,19 +318,19 @@ function formatNumber(input) {
         unpaidCount++;
       }
     }
-    $('#totalDebtAmount').html(`${totalAmount} (${amountToText(totalAmount)}) ${unpaidCount + paidCount} វិក្តយបត្រ`);
-    $('#unpaidDebtAmount').html(`${unpaidAmount} (${amountToText(unpaidAmount)}) ${unpaidCount} វិក្តយបត្រ`);
-    $('#paidDebtAmount').html(`${paidAmount} (${amountToText(paidAmount)}) ${paidCount} វិក្តយបត្រ`);
+    $('#totalDebtAmount').html(`${Number(totalAmount).toLocaleString()} (${amountToText(totalAmount)}) ${unpaidCount + paidCount} វិក្តយបត្រ`);
+    $('#unpaidDebtAmount').html(`${Number(unpaidAmount).toLocaleString()} (${amountToText(unpaidAmount)}) ${unpaidCount} វិក្តយបត្រ`);
+    $('#paidDebtAmount').html(`${Number(paidAmount).toLocaleString()} (${amountToText(paidAmount)}) ${paidCount} វិក្តយបត្រ`);
   }
 
-  $(document).on('input', '#txtSearch', function(){
+  function searchTable(value){
     var table = $('#tableBody tr');
     let totalAmount = 0;
     let unpaidAmount = 0;
     let paidAmount = 0;
     for (let index = 0; index < table.length; index++) {
       for (let i = 0; i < table[index].children.length; i++) {
-        if(table[index].children[i].innerText.toLowerCase().includes($(this).val().toLowerCase())){
+        if(table[index].children[i].innerText.toLowerCase().includes(value.toLowerCase())){
           table[index].style.display = "";
           // Get value from table cell amount
           totalAmount += parseInt((table[index].children[4].innerText).replace(/\D/g, ''));
@@ -254,10 +349,82 @@ function formatNumber(input) {
       }
     }
     $('#loading').hide();
-    // $('#totalDebtAmount').html(`${totalAmount} (${amountToText(totalAmount)})`);
-    // $('#unpaidDebtAmount').html(`${unpaidAmount} (${amountToText(unpaidAmount)})`);
-    // $('#paidDebtAmount').html(`${paidAmount} (${amountToText(paidAmount)})`);
     updateDebtAmount();
+  }
+
+  // async function pay(debtorId){
+  //   await $.ajax({
+  //     url: 'https://makaracoreapi.reanmakara.xyz/api/debt/get',
+  //     type: 'GET',
+  //     data: {
+  //       debtor_id: debtorId,
+  //       is_paid: 0,
+  //     },
+  //     success: function(response){
+  //       response.content.forEach(function(debt){
+  //         $.ajax({
+  //           url: 'https://makaracoreapi.reanmakara.xyz/api/debt/pay',
+  //           type: 'PUT',
+  //           data: {
+  //             id: debt.id
+  //           },
+  //           success: function(response){
+  //             console.log(response);
+  //             return response;
+  //           },
+  //           error: function(error){
+  //             console.log(error);
+  //             return error.responseJSON;
+  //           }
+  //         });
+  //       });
+  //     },
+  //     error: function(error){
+  //       console.log(error);
+  //       return error.responseJSON;
+  //     }
+  //   });
+  // }
+
+  async function pay(debtorId) {
+    try {
+      const response = await $.ajax({
+        url: 'https://makaracoreapi.reanmakara.xyz/api/debt/get',
+        type: 'GET',
+        data: {
+          debtor_id: debtorId,
+          is_paid: 0,
+        }
+      });
+  
+      for (const debt of response.content) {
+        const paymentResponse = await $.ajax({
+          url: 'https://makaracoreapi.reanmakara.xyz/api/debt/pay',
+          type: 'PUT',
+          data: {
+            id: debt.id
+          }
+        });
+  
+        console.log(paymentResponse);
+        // You can do further processing with paymentResponse if needed
+      }
+  
+      return response; // Returning the initial response
+    } catch (error) {
+      console.log(error);
+      return error.responseJSON; // Returning the error response
+    }
+  }
+
+  $(document).on('input',  '#txtAmountPaySome', function(){
+    var newDebtAmount = parseInt($('#amountToPay').val()) - $(this).val();
+    $('#txtNewDebtAmount').val(Number(newDebtAmount).toLocaleString()+' រៀល');
+  });
+  
+
+  $(document).on('input', '#txtSearch', function(){
+    searchTable($(this).val());
   });
 
   $(document).on('click', '#btnPay', function(){
@@ -265,31 +432,44 @@ function formatNumber(input) {
     $('#payMedalTitle').html(debtor + ' ពិតជាបានមកទូទាត់');
   });
 
-  $(document).on('click', '#btnPayDebt', function(){
+$(document).on('click', '#btnPayDebt', async function(){
     var debtorId = $('#debtorToPayId').val();
-    $('#btnPayDebtSpinner').show();
-    $.ajax({
-      url: 'https://makaracoreapi.reanmakara.xyz/api/debt/get',
-      type: 'GET',
-      data: {
-        debtor_id: debtorId
-      },
-      success: function(response){
-        response.content.forEach(function(debt){
-          $.ajax({
-            url: 'https://makaracoreapi.reanmakara.xyz/api/debt/pay',
-            type: 'PUT',
-            data: {
-              id: debt.id
-            },
-            success: function(response){
-              console.log(response);
-            },
-            error: function(error){
-              console.log(error);
-            }
-          });
+    var amountPaySome = $('#txtAmountPaySome').val();
+    var amountToPay = $('#amountToPay').val();
+    var newDebtAmount = $('#txtNewDebtAmount').val();
+    var debtorName = $('#debtorToPay').val();
+    // Check if pay some
+    if ($('#paySomeCheckbox').prop('checked')) {
+      $('#btnPayDebtSpinner').show();
+      var res = await pay(debtorId);
+      if (res.status == 200){
+        var response = await $.post("https://makaracoreapi.reanmakara.xyz/api/debt/add", {
+          debtor_id: debtorId,
+          amount: amountPaySome,
+          note: `${debtorName} មកទូទាត់ខ្លះចំនួន ${amountPaySome} រៀល។ នៅជំពាក់ ${newDebtAmount}`,
         });
+        console.log(response);
+        if (response.status == 201) {
+          // show success message
+          $('#btnPayDebtSpinner').hide();
+          $('#closePayMedal').click();
+          $('#debtorToPay').val('');
+          $('#debtorToPay').prop('disabled', false);
+          $('#debtorToPayId').val('');
+          $('#amountToPay').val('');
+          $('#txtDebtCount').val('');
+          $('#payDebtAlertMessage').append('<div class="alert alert-success alert-dismissible role="alert"><div>ការទូទាត់បានដោយជោគជ័យ</div><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>').delay(5000).fadeOut(1000);
+          location.reload();
+        }
+        else{
+          $('#payDebtAlertMessage').append('<div class="alert alert-danger alert-dismissible role="alert"><div>ការទូទាត់បានបរាជ័យ</div><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>').delay(5000).fadeOut(1000);
+        }
+      }
+    }
+    else{
+      $('#btnPayDebtSpinner').show();
+      var res = await pay(debtorId);
+      if (res.status == 200){
         $('#btnPayDebtSpinner').hide();
         $('#closePayMedal').click();
         $('#payDebtAlertMessage').append('<div class="alert alert-success alert-dismissible role="alert"><div>ទូទាត់បំណុលបានដោយជោគជ័យ</div><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>').delay(5000).fadeOut(1000);
@@ -298,12 +478,12 @@ function formatNumber(input) {
         $('#debtorToPayId').val('');
         $('#amountToPay').val('');
         $('#txtDebtCount').val('');
-      },
-      error: function(error){
-        console.log(error);
-      
+        location.reload();
       }
-    });
+      else{
+        $('#payDebtAlertMessage').append(`<div class="alert alert-danger alert-dismissible role="alert"><div>${res.message}</div></div>`);
+      }
+    }
   });
 
   function search(){
@@ -341,6 +521,7 @@ function formatNumber(input) {
                   <th>${debt.debtor.sex}</th>
                   <th>${debt.debtor.address}</th>
                   <th>${Number(debt.amount).toLocaleString()} រៀល</th>
+                  <th>${debt.note || ""}</th>
               </tr>`;
             } else {
               debtorRow = `<tr class="table-warning">
@@ -349,6 +530,7 @@ function formatNumber(input) {
                   <th>${debt.debtor.sex}</th>
                   <th>${debt.debtor.address}</th>
                   <th>${Number(debt.amount).toLocaleString()} រៀល</th>
+                  <th>${debt.note || ""}</th>
               </tr>`;
             }
           rowNum++;
@@ -360,7 +542,7 @@ function formatNumber(input) {
       },
       error: function(error){
         if (error.responseJSON.status == 404){
-          $('#contentAboveTable').append(`<div class="alert alert-success alert-dismissible role="alert"><div>មិនមានទិន្នន័យ! || ${error.responseJSON.message}</div><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>`);
+          contentAboveTable(`មិនមានទិន្នន័យ! || ${error.responseJSON.message}`, 'alert-danger')
           $('#loading').hide();
           updateDebtAmount();
         }
@@ -368,6 +550,19 @@ function formatNumber(input) {
     });
     
   }
+
+  // Hide dropdown when click outside of it and input
+  $(document).on('click', function(event) {
+    if (
+      !$(event.target).closest('#debtor, #dropdownOptions').length &&
+      !$(event.target).closest('#debtorToPay, #dropdownOptionDebt').length
+    ) {
+      $('#dropdownOptions').hide();
+      $('#span-debtor i').hide();
+      $('#dropdownOptionDebt').hide();
+      $('#span-debt i').hide();
+    }
+  });
   
   
    

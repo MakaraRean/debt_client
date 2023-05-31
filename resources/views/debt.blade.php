@@ -6,8 +6,8 @@
             @csrf
             <a href="#searchCollapse" data-bs-toggle="collapse" role="button" aria-expanded="false"
                 aria-controls="searchCollapse">
-                {{-- <img src="{{ asset('images/search.png') }}" alt="" width="20px" height="20px"> --}}
-                <button class="btn-close"></button>
+                <img src="{{ asset('images/filter.png') }}" alt="" width="30px" height="25px"> <span>តម្រង</span>
+                {{-- <button class="btn-close"></button> --}}
             </a>
             <div class="collapse" id="searchCollapse">
                 <div class="row g-2 mt-2">
@@ -33,16 +33,17 @@
                             <option value="Unpaid">មិនទាន់បានទូទាត់</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary" type="button" onclick="search()">Search</button>
+                    <button class="btn btn-primary" type="button" onclick="search()">ស្វែងរក</button>
                 </div>
             </div>
         </form>
         <div class="row g-2 mt-2 mb-2">
             <div class="col-auto">
-                <input class="form-control border border-primary" type="search" name="txtSearch" id="txtSearch">
+                <input class="form-control border border-primary" type="search" name="txtSearch" id="txtSearch"
+                    placeholder="ឈ្មោះ, ភូមិ, ទឹកប្រាក់, ចំណាំ">
             </div>
             <div class="col-auto">
-                <button class="form-control" type="submit">Search</button>
+                <button class="form-control" type="button" onclick="searchTable(txtSearch.value)">ស្វែងរក</button>
             </div>
 
             <a class="btn" data-bs-toggle="collapse" href="#collapseTotalAmount" role="button" aria-expanded="false"
@@ -76,6 +77,7 @@
                         <th>ភេទ</th>
                         <th>អាស័យដ្ឋាន</th>
                         <th>ចំនួនទឹកប្រាក់</th>
+                        <th>ចំណាំ</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -108,22 +110,43 @@
             <div id="newDebtAlertMessage">
 
             </div>
+
+            <div class="row">
+                <div class="input-group dropdown col-md-5">
+                    <span class="input-group-text" id="span-debtor">អ្នកជំពាក់
+                        <i class="fa-solid fa-circle-notch fa-spin fa-lg" style="color: #184dec; display: none"
+                            id="iconSpinner"></i>
+                        <i class="fa-solid fa-check fa-fade fa-lg" style="color: #1ce119; display: none"
+                            id="iconCheck"></i>
+                        <i class="fa-solid fa-xmark" style="color: #e60000; display: none" id="iconX"></i>
+                    </span>
+                    <input class="form-control" type="text" name="debtor" id="debtor" placeholder="ឈ្មោះ"
+                        aria-describedby="span-debtor" aria-label="Debtor" autocomplete="off"
+                        oninput="debtorSuggestion('#dropdownOptions', '#debtor', '#span-debtor')"
+                        onfocus="getDebtor_onFocus('#span-debtor', '#dropdownOptions')">
+                    <input type="hidden" id="debtorId">
+                    <div class="dropdown-menu scrollable mt-5" id="dropdownOptions"
+                        style="max-height: 150px; overflow-y: auto"></div>
+                </div>
+
+            </div>
+            <p class="text-body-secondary" style="font-size: 12px">សរសេរឈ្មោះអ្នកជំពាក់ រួចជ្រើសយកក្នុងបញ្ជីរ
+                បើមិនមានក្នុងបញ្ជីរ <a href="" data-bs-toggle="modal"
+                    data-bs-target="#newDebtorMedal">សូមបង្កើតថ្មី</a>
+            </p>
+
             <div class="mb-3 input-group">
                 <span class="input-group-text" id="span-amount">ចំនួនទឹកប្រាក់</span>
                 <input class="form-control" type="number" name="amount" id="amount" aria-describedby="span-amount"
                     placeholder="រៀល" aria-label="amount" inputmode="numeric" required>
             </div>
-            <div class="input-group dropdown">
-                <span class="input-group-text" id="span-debtor">អ្នកជំពាក់</span>
-                <input class="form-control" type="text" name="debtor" id="debtor" placeholder="ឈ្មោះ"
-                    aria-describedby="span-debtor" aria-label="Debtor" autocomplete="off"
-                    oninput="debtorSuggestion('#dropdownOptions', '#debtor')" onfocus="getDebtor_onFocus()">
-                <input type="hidden" id="debtorId">
-                <div class="dropdown-menu mt-5" id="dropdownOptions"></div>
+
+            <div class="mb-3 input-group">
+                <span class="input-group-text" id="span-note">ចំណាំ</span>
+                <textarea class="form-control" name="txtNote" id="txtNote" aria-describedby="span-note"
+                    placeholder="ឩទាហរណ៍ ៖ សាំងធម្មតា 30លីត្រ x 4000 រៀល" aria-label="note" cols="10" rows="3"></textarea>
             </div>
-            <p class="text-body-secondary" style="font-size: 12px">សរសេរឈ្មោះអ្នកជំពាក់ រួចជ្រើសយកក្នុងបញ្ជីរ
-                បើមិនមានក្នុងបញ្ជីរ <a href="" data-bs-toggle="modal"
-                    data-bs-target="#newDebtorMedal">សូមបង្កើតថ្មី</a></p>
+
             <button class="btn btn-primary" type="submit" id="addNewDebt" onclick="newDebt_Clicked()" disabled>
                 <span id="btnSaveDebtSpinner" class="spinner-border spinner-border-sm" role="status"
                     aria-hidden="true"></span>
@@ -182,11 +205,16 @@
             @csrf
             <div id="payDebtAlertMessage"></div>
             <div class="col-md-6 input-group mb-3 dropdown">
-                <span class="input-group-text" id="span-debt">ឈ្មោះអ្នកជំពាក់</span>
+                <span class="input-group-text" id="span-debt">ឈ្មោះអ្នកជំពាក់
+                    <i class="fa-solid fa-circle-notch fa-spin fa-lg" style="color: #184dec; display: none"
+                        id="iconSpinner"></i>
+                    <i class="fa-solid fa-check fa-fade fa-lg" style="color: #1ce119; display: none" id="iconCheck"></i>
+                    <i class="fa-solid fa-xmark" style="color: #e60000; display: none" id="iconX"></i>
+                </span>
                 <input class="form-control" type="text" name="debtorToPay" id="debtorToPay"
                     placeholder="ឈ្មោះ និង ភូមិ" aria-describedby="span-debtor" placeholder="Debtor" aria-label="Debt"
-                    autocomplete="off" oninput="debtorSuggestion('#dropdownOptionDebt', '#debtorToPay')"
-                    onfocus="getDebtor_onFocus()">
+                    autocomplete="off" oninput="debtorSuggestion('#dropdownOptionDebt', '#debtorToPay', '#span-debt')"
+                    onfocus="getDebtor_onFocus('#span-debt', '#dropdownOptionDebt')">
                 <input type="hidden" id="debtorToPayId">
                 <div class="dropdown-menu mt-5" id="dropdownOptionDebt"></div>
             </div>
@@ -211,14 +239,24 @@
 
             <div class="form-check mb-3">
                 <input class="form-check-input" type="checkbox" name="paySomeCheckbox" id="paySomeCheckbox">
-                <label class="form-check-label" for="paySomeCheckbox">Check this if debtor pay some</label>
+                <label class="form-check-label" for="paySomeCheckbox">ចុចត្រង់នេះប្រសិនបើអតិថិជនមកបង់លុយខ្លះ
+                    (បង់មិនទាន់ដាច់)</label>
             </div>
 
             {{-- Pay some content --}}
-            <div id="divPaySome" class="input-group mb-3 dropdown" style="display: none">
-                <span class="input-group-text" id="span-topay">Amount to pay</span>
-                <input class="form-control" type="text" name="topay" id="topay" placeholder="topay"
-                    aria-describedby="span-topay" placeholder="topay" aria-label="topay" autocomplete="off">
+            <div id="divPaySome" style="display: none">
+                <div class="input-group mb-3 dropdown">
+                    <span class="input-group-text" id="span-amount-topay">ទឹកប្រាក់ដែលបានបង់</span>
+                    <input class="form-control" type="number" name="txtAmountPaySome" id="txtAmountPaySome"
+                        placeholder="ទឹកប្រាក់" aria-describedby="span-amount-topay" aria-label="amount-topay"
+                        autocomplete="off" inputmode="numeric">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-text" id="span-new-debt-amount">ទឹកប្រាក់ដែលនៅជំពាក់</span>
+                    <input class="form-control" type="text" name="txtNewDebtAmount" id="txtNewDebtAmount"
+                        placeholder="ទឹកប្រាក់ដែលនៅជំពាក់" aria-describedby="span-new-debt-amount"
+                        aria-label="new-debt-amount" readonly>
+                </div>
             </div>
             <button class="mt-3 col btn btn-primary" id="btnPay" type="button" disabled data-bs-toggle="modal"
                 data-bs-target="#payDebtMedal">Pay</button>
