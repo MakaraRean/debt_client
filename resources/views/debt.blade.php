@@ -223,7 +223,7 @@
 
                 <span class="input-group-text" id="span-amount-topay">ទឹកប្រាក់ដែលត្រូវទូទាត់</span>
                 <input class="form-control" type="text" id="amountToPay" name="amountToPay"
-                    aria-describedby="span-amout-topay" placeholder="រៀល" readonly>
+                    aria-describedby="span-amout-topay" placeholder="រៀល" data-amount="" readonly>
                 <div class="input-group-append" id="payDebtSpinner" style="display: none">
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">Loading...</span>

@@ -266,7 +266,9 @@
                 url: 'https://makaracoreapi.reanmakara.xyz/api/debt/getByDebtor/' + $(this).data('id'),
                 type: 'GET',
                 success: function(response) {
-                    $('#amountToPay').val(response.content.total_amount + ' រៀល');
+                    $('#amountToPay').val(Number(response.content.total_amount).toLocaleString() +
+                        ' រៀល');
+                    $('#amountToPay').attr('data-amount', response.content.total_amount);
                     $('#txtDebtCount').val(response.content.debt_count + ' វិក័យបត្រ');
                     $('#btnPay').prop('disabled', false);
                     $('#payDebtSpinner').hide();

@@ -277,6 +277,14 @@ function debtorFound(status, iconParrent){
     });
     console.log(response);
       if (response.status == 201) {
+        var message = 
+        `មានវិក្តយបត្រថ្មី 🔔
+------------------------------
+អតិថិជន  : ${$('#debtor').val()}
+ទឺកប្រាក់  : ${$('#amount').val()} រៀល
+ចំណាំ     : ${$('#txtNote').val()}
+        `
+        await sendMessageToTelegramGroup(telegramGroupId, message);
         $('#btnSaveDebtSpinner').hide();
         $('#addNewDebt').html('បន្តែម');
         // show success message
@@ -418,7 +426,7 @@ function debtorFound(status, iconParrent){
   }
 
   $(document).on('input',  '#txtAmountPaySome', function(){
-    var newDebtAmount = parseInt($('#amountToPay').val()) - $(this).val();
+    var newDebtAmount = parseInt(($('#amountToPay').val().replace(/\D/g, ''))) - $(this).val();
     $('#txtNewDebtAmount').val(Number(newDebtAmount).toLocaleString()+' រៀល');
   });
   
@@ -436,7 +444,7 @@ $(document).on('click', '#btnPayDebt', async function(){
     var debtorId = $('#debtorToPayId').val();
     var amountPaySome = $('#txtAmountPaySome').val();
     var amountToPay = $('#amountToPay').val();
-    var newDebtAmount = $('#txtNewDebtAmount').val();
+    var newDebtAmount = $('#amountToPay').data('amount') - amountPaySome;
     var debtorName = $('#debtorToPay').val();
     // Check if pay some
     if ($('#paySomeCheckbox').prop('checked')) {
@@ -445,11 +453,20 @@ $(document).on('click', '#btnPayDebt', async function(){
       if (res.status == 200){
         var response = await $.post("https://makaracoreapi.reanmakara.xyz/api/debt/add", {
           debtor_id: debtorId,
-          amount: amountPaySome,
-          note: `${debtorName} មកទូទាត់ខ្លះចំនួន ${amountPaySome} រៀល។ នៅជំពាក់ ${newDebtAmount}`,
+          amount: newDebtAmount,
+          note: `មកទូទាត់ខ្លះចំនួន ${amountPaySome} រៀល។ នៅជំពាក់ ${newDebtAmount}`,
         });
         console.log(response);
         if (response.status == 201) {
+          const message = 
+          `មានអតិថិជនបានមកទូទាត់ខ្លះ 🔔🤑
+-----------------------------
+អតិថិជន : ${debtorName}
+ជំពាក់សរុប : ${amountToPay}
+បានទូទាត់ : ${Number(amountPaySome).toLocaleString()} រៀល
+នៅជំពាក់ : ${Number(newDebtAmount).toLocaleString()} រៀល
+          `
+          await sendMessageToTelegramGroup(telegramGroupId, message)
           // show success message
           $('#btnPayDebtSpinner').hide();
           $('#closePayMedal').click();
@@ -563,6 +580,26 @@ $(document).on('click', '#btnPayDebt', async function(){
       $('#span-debt i').hide();
     }
   });
+
+  const telegramBotToken = '5752204112:AAHR4w3ZpFYkuW7TqTzCBpqJ9gwmKv8huRo';
+  const telegramGroupId = '-929359637';
+  // Send message to telegram group
+  async function sendMessageToTelegramGroup(groupId, message) {
+    await $.ajax({
+      url: `https://api.telegram.org/bot${telegramBotToken}/sendMessage`,
+      type: 'POST',
+      data: {
+        chat_id: groupId,
+        text: message,
+      },
+      success: function(data) {
+        console.log(data);
+      },
+      error: function(error) {
+        console.log(error);
+      },
+    });
+  }
   
   
    
