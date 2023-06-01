@@ -279,10 +279,13 @@ function debtorFound(status, iconParrent){
       if (response.status == 201) {
         var message = 
         `មានវិក្តយបត្រថ្មី 🔔
-------------------------------
+----------------------------------
 អតិថិជន  : ${$('#debtor').val()}
 ទឺកប្រាក់  : ${$('#amount').val()} រៀល
 ចំណាំ     : ${$('#txtNote').val()}
+តាមរយៈ : Website
+----------------------------------
+សូមប៉ាប៉ា ម៉ាក់ម៉ាក់ជ្រាបជាដំណឹង 🔊🔔
         `
         await sendMessageToTelegramGroup(telegramGroupId, message);
         $('#btnSaveDebtSpinner').hide();
@@ -460,11 +463,14 @@ $(document).on('click', '#btnPayDebt', async function(){
         if (response.status == 201) {
           const message = 
           `មានអតិថិជនបានមកទូទាត់ខ្លះ 🔔🤑
------------------------------
+---------------------------------
 អតិថិជន : ${debtorName}
 ជំពាក់សរុប : ${amountToPay}
 បានទូទាត់ : ${Number(amountPaySome).toLocaleString()} រៀល
 នៅជំពាក់ : ${Number(newDebtAmount).toLocaleString()} រៀល
+តាមរយៈ : Website
+---------------------------------
+សូមប៉ាប៉ា ម៉ាក់ម៉ាក់ជ្រាបជាដំណឹង 🔊🔔
           `
           await sendMessageToTelegramGroup(telegramGroupId, message)
           // show success message
@@ -487,6 +493,16 @@ $(document).on('click', '#btnPayDebt', async function(){
       $('#btnPayDebtSpinner').show();
       var res = await pay(debtorId);
       if (res.status == 200){
+        const message = `
+        មានអតិថិជនមកទូទាត់វិក្តបត្រ 💵✅
+--------------------------------------
+អតិថិជន : ${debtorName}
+ទឹកប្រាក់ដែលបានទូទាត់់ : ${amountToPay}
+តាមរយៈ : Website
+---------------------------------------
+សូមប៉ាប៉ា ម៉ាក់ម៉ាក់ជ្រាបជាដំណឹង 🔊🔔
+        `
+        await sendMessageToTelegramGroup(telegramGroupId, message);
         $('#btnPayDebtSpinner').hide();
         $('#closePayMedal').click();
         $('#payDebtAlertMessage').append('<div class="alert alert-success alert-dismissible role="alert"><div>ទូទាត់បំណុលបានដោយជោគជ័យ</div><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>').delay(5000).fadeOut(1000);
