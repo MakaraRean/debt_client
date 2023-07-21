@@ -598,7 +598,7 @@ $(document).on('click', '#btnPayDebt', async function(){
   });
 
   const telegramBotToken = '5752204112:AAHR4w3ZpFYkuW7TqTzCBpqJ9gwmKv8huRo';
-  const telegramGroupId = '-929359637';
+  const telegramGroupId = '-1001839510943';
   // Send message to telegram group
   async function sendMessageToTelegramGroup(groupId, message) {
     await $.ajax({
