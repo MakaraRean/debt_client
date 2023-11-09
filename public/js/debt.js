@@ -615,4 +615,4 @@ $(document).on('click', '#btnPayDebt', async function(){
         console.log(error);
       },
     });
-  } 
+  }
